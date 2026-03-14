@@ -1,11 +1,8 @@
-name: simple-nlp
+name: mlflow-projects-demo
 
-conda_env: conda.yaml
 
+experiment: mlflow-demo
 entry_points:
   main:
-    parameters:
-      penalty: {type: str, default: l2}
-      C: {type: float, default: 1.0}
-      solver: {type: str, default: lbfgs}
-    command: "python mlflow-projects-example.py --penalty {penalty} --C {C} --solver {solver}"
+    command: "python mlflow-projects-example.py"
+

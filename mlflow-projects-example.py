@@ -13,7 +13,7 @@ from sklearn.base import BaseEstimator
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import f1_score, confusion_matrix
-from scipy.sparse.csr import csr_matrix
+from scipy.sparse import csr_matrix
 
 
 np.random.seed(1234)
@@ -21,7 +21,7 @@ np.random.seed(1234)
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    
+
     parser.add_argument("--penalty", choices=["l1", "l2", "elasticnet", "none"], default="l2")
     parser.add_argument("--C", type=float, default=1.0)
     parser.add_argument("--solver", choices=["newton-cg", "lbfgs", "liblinear", "sag", "saga"], default="lbfgs")
@@ -29,7 +29,7 @@ def parse_args():
     return parser.parse_args()
 
 def prepare_data(df: pd.DataFrame, test_size: float) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    train_df, test_df = train_test_split(df, test_size=test_size, stratify=df["sentiment"], random_state=1234) 
+    train_df, test_df = train_test_split(df, test_size=test_size, stratify=df["sentiment"], random_state=1234)
     return train_df, test_df
 
 
@@ -78,10 +78,9 @@ def draw_confusion_matrix(true_labels: np.ndarray, predicted_labels: np.ndarray,
 
 
 def main(args):
-    mlflow.set_tracking_uri("http://mlflow-tracking-server:5000")
-    mlflow.set_experiment("mlflow-projects-demo")
-
-    df = pd.read_csv("../imdb-dataset.csv")
+    mlflow.set_tracking_uri("http://127.0.0.1:5000")
+    # mlflow.set_experiment("mlflow-demo")
+    df = pd.read_csv("./imdb-dataset.csv")
     df["label"] = pd.factorize(df["sentiment"])[0]
 
     test_size = 0.3
@@ -90,7 +89,7 @@ def main(args):
     with mlflow.start_run():
         train_inputs, test_inputs = make_features(train_df, test_df)
         model = train(
-            train_inputs, 
+            train_inputs,
             train_df["label"].values,
             penalty=args.penalty,
             C=args.C,
